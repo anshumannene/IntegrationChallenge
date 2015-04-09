@@ -4,7 +4,11 @@ class LoginController {
 
     def index() { }
 	
-	def loggedin() { }
+	def loggedin() {
+		render "Logged in" 
+	}
 	
-	def error() { }
+	def error() {
+		render "there was an error"
+	}
 }

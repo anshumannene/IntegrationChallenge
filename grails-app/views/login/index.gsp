@@ -16,8 +16,9 @@
         </openid:hasLoginError>
         
         <openid:form success="[controller:'login', action:'loggedin']" error="[controller:'login', action:'error']">
-            <openid:input size="30" value="http://" /> (e.g. http://username.myopenid.com)
+            <openid:input size="30" value="https://www.appdirect.com/openid/id" /> (e.g. http://username.myopenid.com)
             <br/>
             <g:submitButton name="login" value="Login" />
-        </openid:form>    </body>
+        </openid:form>
+    </body>
 </html>
