@@ -87,7 +87,7 @@ environments {
 oauth {
     providers {
         appdirect {
-            api = AppDirect
+            api = AppDirectApi
             key = 'integrationchallenge-20800'
             secret = '4qQd2EoyH8Gvuo8u'
         }
