@@ -5,18 +5,18 @@ class SubscriptionController {
 	def subscriptionService
 	
     def create() {
-		render "create"
+		render params.url
 	}
 	
 	def change() {
-		render "change"
+		render params.url
 	}
 	
 	def cancel() {
-		render "cancel"
+		render params.url
 	}
 	
 	def status() {
-		render "status"
+		render params.url
 	}
 }
