@@ -7,16 +7,17 @@ import org.scribe.model.Verb
 import org.scribe.oauth.OAuthService
 
 import uk.co.desirableobjects.oauth.scribe.OauthResourceService
+import uk.co.desirableobjects.oauth.scribe.OauthService
 
-class AuthenticationService {
+class AuthenticationService extends OauthService {
 
     OauthResourceService oauthResourceService
-    OAuthService service
 
     def signAndSendRequest(url) {
         OAuthRequest request = new OAuthRequest(Verb.GET, url)
         Token token = new Token("", "")
-        Response response = oauthResourceService.signAndSend(service, new Token("", ""), request)
+        OAuthService service = findService("appdirect")
+        Response response = oauthResourceService.signAndSend(service, token, request)
         response.getBody()
     }
 }
