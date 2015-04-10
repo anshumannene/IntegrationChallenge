@@ -31,7 +31,9 @@ grails.project.dependency.resolution = {
         //mavenRepo "http://download.java.net/maven/2/"
         //mavenRepo "http://repository.jboss.com/maven2/"
 
-		mavenRepo "http://repo.grails.org/grails/plugins-releases-local"
+        mavenRepo "http://repo.grails.org/grails/plugins-releases-local"
+        
+        mavenRepo "https://raw.github.com/fernandezpablo85/scribe-java/mvn-repo/"
     }
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
@@ -42,6 +44,7 @@ grails.project.dependency.resolution = {
         runtime ":hibernate:$grailsVersion"
         runtime ":jquery:1.7.2"
         runtime ":resources:1.1.6"
+        //runtime ':oauth:2.6.1'
 
         // Uncomment these (or add new ones) to enable additional resources capabilities
         //runtime ":zipped-resources:1.0"
@@ -53,7 +56,9 @@ grails.project.dependency.resolution = {
         runtime ":database-migration:1.1"
 
         compile ':cache:1.0.0'
-		
-		compile ":openid:0.4.4"
+
+        compile ":openid:0.4.4"
+        
+        compile ":oauth:2.6.1"
     }
 }

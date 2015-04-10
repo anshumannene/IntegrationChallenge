@@ -2,6 +2,9 @@ package integrationchallenge
 
 class SubscriptionService {
 
-    def serviceMethod() {
+    AuthenticationService authenticationService
+    
+    def create(String url) {
+        authenticationService.signAndSendRequest(url)
     }
 }
