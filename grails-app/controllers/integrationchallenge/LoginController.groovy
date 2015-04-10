@@ -5,7 +5,7 @@ class LoginController {
     def index() { }
 	
 	def loggedin() {
-		render "Logged in as: ${session.openidIdentifier}   ${session.openidParams.sreg}    ${session.openidParams.ax}"
+		render "Logged in as: ${session.openidIdentifier}"
 	}
 	
 	def error() {
