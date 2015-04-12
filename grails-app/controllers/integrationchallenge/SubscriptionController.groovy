@@ -1,22 +1,24 @@
 package integrationchallenge
 
+import grails.converters.XML
+
 class SubscriptionController {
 
     def subscriptionService
 
     def create() {
-        render subscriptionService.create(params.url)
+        render (view: "create", model: [result: subscriptionService.create(params.url)], contentType: 'text/xml') as XML
     }
 
     def change() {
-        render params.url
+        render subscriptionService.change(params.url)
     }
 
     def cancel() {
-        render params.url
+        render subscriptionService.cancel(params.url)
     }
 
     def status() {
-        render params.url
+        render subscriptionService.status(params.url)
     }
 }

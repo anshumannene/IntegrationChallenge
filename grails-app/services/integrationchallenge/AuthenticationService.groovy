@@ -13,8 +13,11 @@ class AuthenticationService extends OauthService {
 
     OauthResourceService oauthResourceService
 
-    def signAndSendRequest(url) {
+    String signAndSendRequest(url) {
+        log.info(url)
+        //verify incoming request
         OAuthRequest request = new OAuthRequest(Verb.GET, url)
+        log.info(request.getOauthParameters())
         Token token = new Token("", "")
         OAuthService service = findService("appdirect")
         Response response = oauthResourceService.signAndSend(service, token, request)
