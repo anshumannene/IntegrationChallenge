@@ -1,4 +1,5 @@
 import grails.util.Environment
+import integrationchallenge.AuthenticationService
 import integrationchallenge.MockOpenidService
 import integrationchallenge.MockSubscriptionService
 import integrationchallenge.SubscriptionService
@@ -10,10 +11,10 @@ beans = {
             subscriptionService(MockSubscriptionService)
             break
         case Environment.DEVELOPMENT:
-            subscriptionService(SubscriptionService)
+            subscriptionService(SubscriptionService) {  authenticationService(AuthenticationService)  }
             break
         case Environment.PRODUCTION:
-            subscriptionService(SubscriptionService)
+            subscriptionService(SubscriptionService) {  authenticationService(AuthenticationService)  }
             break
     }
 }
