@@ -7,4 +7,8 @@
   <g:else>
     <errorCode>${result.errorCode}</errorCode>
   </g:else>
+  
+  <g:if test="${result.message}">
+    <message>${result.message}</message>
+  </g:if>
 </result>

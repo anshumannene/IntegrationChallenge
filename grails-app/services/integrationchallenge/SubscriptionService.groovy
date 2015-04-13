@@ -20,7 +20,9 @@ class SubscriptionService {
     }
 
     def change(String url) {
-        String createResponse = authenticationService.signAndSendRequest(url)
+        String responseXml = authenticationService.signAndSendRequest(url)
+        def event = new XmlSlurper().parseText(responseXml)
+        handleEvent(event)
     }
 
     def status(String url) {
@@ -92,6 +94,26 @@ class SubscriptionService {
             Subscription subscription = Subscription.findWhere(query)
             if (subscription) {
                 subscription.status = 'CANCELLED'
+                subscription.save(true)
+                result.success = true
+            } else {
+                result.errorCode = 'ACCOUNT_NOT_FOUND'
+            }
+        } catch (Exception e) {
+            result.errorCode = 'UNKNOWN_ERROR'
+        }
+        result
+    }
+
+    private changeSubscription(event) {
+        def accountIdentifier = event?.payload?.account?.accountIdentifier?.text()
+        def result = [success: false]
+        try {
+            def query = [accountIdentifier: accountIdentifier]
+            Subscription subscription = Subscription.findWhere(query)
+            if (subscription) {
+                def edition = payload?.order?.editionCode?.text()
+                subscription.edition = edition
                 subscription.save(true)
                 result.success = true
             } else {
