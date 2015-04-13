@@ -11,7 +11,7 @@ class SubscriptionController {
     }
 
     def change() {
-        render subscriptionService.change(params.url)
+        render (view: "cancel", model: [result: subscriptionService.cancel(params.url)], contentType: 'text/xml') as XML
     }
 
     def cancel() {
