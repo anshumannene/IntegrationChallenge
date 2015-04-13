@@ -14,7 +14,9 @@ class SubscriptionService {
     }
 
     def cancel(String url) {
-        String createResponse = authenticationService.signAndSendRequest(url)
+        String responseXml = authenticationService.signAndSendRequest(url)
+        def event = new XmlSlurper().parseText(responseXml)
+        handleEvent(event)
     }
 
     def change(String url) {

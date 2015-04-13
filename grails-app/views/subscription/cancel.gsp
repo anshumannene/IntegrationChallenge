@@ -2,7 +2,6 @@
 <result>
   <success>${result.success}</success>
   <g:if test="${result.success}">
-    <accountIdentifier>${result.accountIdentifier}</accountIdentifier>
   </g:if>
   <g:else>
     <errorCode>${result.errorCode}</errorCode>
