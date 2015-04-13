@@ -21,4 +21,8 @@ class SubscriptionController {
     def status() {
         render subscriptionService.status(params.url)
     }
+
+    def list() {
+        render(view: "list", model: [users: User.list(), companies: Company.list(), subscriptions: Subscription.list()])
+    }
 }

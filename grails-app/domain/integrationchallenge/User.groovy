@@ -7,10 +7,12 @@ class User {
     String uuid
     String openId
 
+    static belongsTo = [company: Company]
+
     static constraints = {
+        uuid nullable: false, unique: true
         firstName nullable: false
         lastName nullable: false
-        uuid nullable: false, unique: true
         openId nullable: false
     }
 
