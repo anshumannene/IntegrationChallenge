@@ -13,7 +13,8 @@ class MockSubscriptionService extends SubscriptionService {
     @Override
     public Object cancel(String url) {
         def PATH = "/mock/cancelResponse.xml"
-        loadXml(PATH)
+        def event = loadXml(PATH)
+        handleEvent(event)
     }
 
     @Override

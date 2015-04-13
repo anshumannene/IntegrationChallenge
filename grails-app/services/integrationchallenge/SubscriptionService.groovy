@@ -83,7 +83,7 @@ class SubscriptionService {
     }
 
     private cancelSubscription(event) {
-        def accountIdentifier = payload?.account?.accountIdentifier?.text()
+        def accountIdentifier = event?.payload?.account?.accountIdentifier?.text()
         def result = [success: false]
         try {
             def query = [accountIdentifier: accountIdentifier]
