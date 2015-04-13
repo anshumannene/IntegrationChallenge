@@ -69,7 +69,8 @@ class SubscriptionService {
                 if (Subscription.findByCompany(company)) {
                     result.errorCode = 'USER_ALREADY_EXISTS'
                 } else {
-                    Subscription subscription = Subscription.createInstance(company)
+                    def edition = payload?.order?.editionCode?.text()
+                    Subscription subscription = Subscription.createInstance(company, edition)
                     Subscription.withTransaction { subscription.save(true) }
                     result.success = true
                     result.accountIdentifier = subscription.accountIdentifier
@@ -83,18 +84,20 @@ class SubscriptionService {
 
     private cancelSubscription(event) {
         def accountIdentifier = payload?.account?.accountIdentifier?.text()
-        result = [success: false]
+        def result = [success: false]
         try {
             def query = [accountIdentifier: accountIdentifier]
-            User user = User.findWhere(query)
-            if (user) {
-                user.delete(flush: true)
+            Subscription subscription = Subscription.findWhere(query)
+            if (subscription) {
+                subscription.status = 'CANCELLED'
+                subscription.save(true)
                 result.success = true
             } else {
-                result.errorCode = 'USER_NOT_FOUND'
+                result.errorCode = 'ACCOUNT_NOT_FOUND'
             }
         } catch (Exception e) {
             result.errorCode = 'UNKNOWN_ERROR'
         }
+        result
     }
 }
