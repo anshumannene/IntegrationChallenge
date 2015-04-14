@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<event xmlns:atom="http://www.w3.org/2005/Atom">
+  <type>SUBSCRIPTION_NOTICE</type>
+  <marketplace>
+    <partner>ACME</partner>
+    <baseUrl>https://www.acme-marketplace.com</baseUrl>
+  </marketplace>
+  <payload>
+    <account>
+      <accountIdentifier>ec5d8eda-5cec-444d-9e30-125b6e4b67e2</accountIdentifier>
+      <status>FREE_TRIAL_EXPIRED</status>
+    </account>
+    <notice>
+      <type>DEACTIVATED</type>
+    </notice>
+  </payload>
+</event>

@@ -11,7 +11,7 @@ class SubscriptionController {
     }
 
     def change() {
-        render (view: "change", model: [result: subscriptionService.cancel(params.url)], contentType: 'text/xml') as XML
+        render (view: "change", model: [result: subscriptionService.change(params.url)], contentType: 'text/xml') as XML
     }
 
     def cancel() {
@@ -19,7 +19,7 @@ class SubscriptionController {
     }
 
     def status() {
-        render (view: "status", model: [result: subscriptionService.cancel(params.url)], contentType: 'text/xml') as XML
+        render (view: "status", model: [result: subscriptionService.status(params.url)], contentType: 'text/xml') as XML
     }
 
     def list() {

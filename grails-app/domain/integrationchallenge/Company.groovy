@@ -3,8 +3,8 @@ package integrationchallenge
 class Company {
 
     String uuid
-    String name
     String email
+    String name
     String website
 
     static hasMany = [employees: User]
@@ -12,7 +12,7 @@ class Company {
     static constraints = {
         uuid nullable: false, unique: true
         name nullable: false
-        email nullable: false
+        email nullable: true
         website nullable: true
     }
 
@@ -23,7 +23,7 @@ class Company {
             name,
             email,
             website,
-            employees.asList()
+            employees.toList()
         ].join(" : ")
     }
 }

@@ -9,6 +9,8 @@ class Subscription {
 
     static constraints = {
         accountIdentifier nullable: false, unique: true
+        company nullable: false
+        edition nullable: false
     }
 
     def static Subscription createInstance(Company company, String edition) {
@@ -21,6 +23,6 @@ class Subscription {
     }
     @Override
     public String toString() {
-        [accountIdentifier, company].join(" : ")
+        [accountIdentifier, edition, status, company].join(" : ")
     }
 }

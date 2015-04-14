@@ -20,13 +20,15 @@ class MockSubscriptionService extends SubscriptionService {
     @Override
     public Object change(String url) {
         def PATH = "/mock/changeResponse.xml"
-        loadXml(PATH)
+        def event = loadXml(PATH)
+        handleEvent(event)
     }
 
     @Override
     public Object status(String url) {
         def PATH = "/mock/status.xml"
-        loadXml(PATH)
+        def event = loadXml(PATH)
+        handleEvent(event)
     }
 
     private loadXml(String path) {

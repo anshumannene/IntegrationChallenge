@@ -1,11 +1,12 @@
 package integrationchallenge
 
-
+import org.springframework.context.MessageSource
 
 class SubscriptionService {
 
     AuthenticationService authenticationService
     UnmarshallingService unmarshallingService
+    MessageSource messageSource
 
     def create(String url) {
         String responseXml = authenticationService.signAndSendRequest(url)
@@ -41,8 +42,10 @@ class SubscriptionService {
                 result = cancelSubscription(event)
                 break
             case 'SUBSCRIPTION_CHANGE':
+                result = changeSubscription(event)
                 break
-            case 'SUBSCRIPTION_STATUS':
+            case 'SUBSCRIPTION_NOTICE':
+                result = noticeSubscription(event)
                 break
             default:
                 result.success = false
@@ -61,13 +64,13 @@ class SubscriptionService {
                 result.errorCode = 'USER_ALREADY_EXISTS'
             } else {
                 User user = unmarshallingService.getUser(creator)
-                user.save(true)
+                user.save(flush: true)
 
                 def payload = event?.payload
                 Company company = unmarshallingService.getCompany(payload?.company)
                 Company.withTransaction {
                     company.addToEmployees(user)
-                    company.save(true)
+                    company.save(flush: true)
                 }
 
                 if (Subscription.findByCompany(company)) {
@@ -75,7 +78,7 @@ class SubscriptionService {
                 } else {
                     def edition = payload?.order?.editionCode?.text()
                     Subscription subscription = Subscription.createInstance(company, edition)
-                    Subscription.withTransaction { subscription.save(true) }
+                    Subscription.withTransaction { subscription.save(flush: true) }
                     result.success = true
                     result.accountIdentifier = subscription.accountIdentifier
                 }
@@ -112,7 +115,7 @@ class SubscriptionService {
             def query = [accountIdentifier: accountIdentifier]
             Subscription subscription = Subscription.findWhere(query)
             if (subscription) {
-                def edition = payload?.order?.editionCode?.text()
+                def edition = event?.payload?.order?.editionCode?.text()
                 subscription.edition = edition
                 subscription.save(true)
                 result.success = true
@@ -123,5 +126,47 @@ class SubscriptionService {
             result.errorCode = 'UNKNOWN_ERROR'
         }
         result
+    }
+    
+    private noticeSubscription(event) {
+        def accountIdentifier = event?.payload?.account?.accountIdentifier?.text()
+        def result = [success: false]
+        
+        try {
+            def query = [accountIdentifier: accountIdentifier]
+            Subscription subscription = Subscription.findWhere(query)
+            if (subscription) {
+                def noticeType = event?.payload?.notice?.type?.text(),
+                    status = getStatusFromNotificationType(noticeType)
+                if (status) {
+                    subscription.status = status
+                    subscription.save(true)
+                }
+                result.success = true
+            } else {
+                result.errorCode = 'ACCOUNT_NOT_FOUND'
+            }
+        } catch (Exception e) {
+            result.errorCode = 'UNKNOWN_ERROR'
+        }
+        result
+    }
+    
+    private getStatusFromNotificationType(String noticeType) {
+        def status
+        switch(noticeType) {
+            case 'DEACTIVATED':
+                status = 'SUSPENDED'
+                break
+            case 'REACTIVATED':
+                status = 'ACTIVE'
+                break
+            case 'CLOSED':
+                status = 'CANCELLED'
+                break
+            default:
+                break 
+        }
+        status
     }
 }
