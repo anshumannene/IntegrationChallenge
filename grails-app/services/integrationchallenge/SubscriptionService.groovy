@@ -26,8 +26,10 @@ class SubscriptionService {
         handleEvent(event)
     }
 
-    def status(String url) {
-        String createResponse = authenticationService.signAndSendRequest(url)
+    def notify(String url) {
+        String responseXml = authenticationService.signAndSendRequest(url)
+        def event = new XmlSlurper().parseText(responseXml)
+        handleEvent(event)
     }
 
     private handleEvent(event) {

@@ -25,7 +25,7 @@ class MockSubscriptionService extends SubscriptionService {
     }
 
     @Override
-    public Object status(String url) {
+    public Object notify(String url) {
         def PATH = "/mock/status.xml"
         def event = loadXml(PATH)
         handleEvent(event)

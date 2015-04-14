@@ -18,8 +18,8 @@ class SubscriptionController {
         render (view: "cancel", model: [result: subscriptionService.cancel(params.url)], contentType: 'text/xml') as XML
     }
 
-    def status() {
-        render (view: "status", model: [result: subscriptionService.status(params.url)], contentType: 'text/xml') as XML
+    def notice() {
+        render (view: "notify", model: [result: subscriptionService.notify(params.url)], contentType: 'text/xml') as XML
     }
 
     def list() {
