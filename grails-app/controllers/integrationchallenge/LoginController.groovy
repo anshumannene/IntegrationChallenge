@@ -5,7 +5,7 @@ class LoginController {
     def index() { }
 
     def loggedin() {
-        render "Logged in as: ${session.openidIdentifier} --> ${session}"
+        redirect(controller: "user", view: "list")
     }
 
     def error() {
