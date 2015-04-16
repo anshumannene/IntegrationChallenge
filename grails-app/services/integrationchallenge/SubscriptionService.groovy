@@ -33,25 +33,25 @@ class SubscriptionService {
     }
 
     private handleEvent(event) {
-        def eventType = event?.type?.text()
-
+        EventType eventType = EventType.fromValue(event?.type?.text())
+        
         def result = [:]
         switch(eventType) {
-            case 'SUBSCRIPTION_ORDER':
+            case EventType.SUBSCRIPTION_ORDER:
                 result = createSubscription(event)
                 break
-            case 'SUBSCRIPTION_CANCEL':
+            case EventType.SUBSCRIPTION_CANCEL:
                 result = cancelSubscription(event)
                 break
-            case 'SUBSCRIPTION_CHANGE':
+            case EventType.SUBSCRIPTION_CHANGE:
                 result = changeSubscription(event)
                 break
-            case 'SUBSCRIPTION_NOTICE':
+            case EventType.SUBSCRIPTION_NOTICE:
                 result = noticeSubscription(event)
                 break
             default:
                 result.success = false
-                result.errorCode = 'INVALID_RESPONSE'
+                result.errorCode = ErrorCode.INVALID_RESPONSE.toString()
                 break
         }
 
@@ -63,7 +63,7 @@ class SubscriptionService {
         try {
             def creator = event?.creator
             if (User.findWhere([uuid: creator?.uuid?.text()])) {
-                result.errorCode = 'USER_ALREADY_EXISTS'
+                result.errorCode = ErrorCode.USER_ALREADY_EXISTS.toString()
             } else {
                 User user = unmarshallingService.getUser(creator)
                 user.save(flush: true)
@@ -76,7 +76,7 @@ class SubscriptionService {
                 }
 
                 if (Subscription.findByCompany(company)) {
-                    result.errorCode = 'USER_ALREADY_EXISTS'
+                    result.errorCode = ErrorCode.USER_ALREADY_EXISTS.toString()
                 } else {
                     def edition = payload?.order?.editionCode?.text()
                     Subscription subscription = Subscription.createInstance(company, edition)
@@ -86,7 +86,7 @@ class SubscriptionService {
                 }
             }
         } catch (Exception e) {
-            result.errorCode = 'UNKNOWN_ERROR'
+            result.errorCode = ErrorCode.UNKNOWN_ERROR.toString()
         }
         result
     }
@@ -98,14 +98,14 @@ class SubscriptionService {
             def query = [accountIdentifier: accountIdentifier]
             Subscription subscription = Subscription.findWhere(query)
             if (subscription) {
-                subscription.status = 'CANCELLED'
+                subscription.status = AccountStatus.CANCELLED.toString()
                 subscription.save(true)
                 result.success = true
             } else {
-                result.errorCode = 'ACCOUNT_NOT_FOUND'
+                result.errorCode = ErrorCode.ACCOUNT_NOT_FOUND.toString()
             }
         } catch (Exception e) {
-            result.errorCode = 'UNKNOWN_ERROR'
+            result.errorCode = ErrorCode.UNKNOWN_ERROR.toString()
         }
         result
     }
@@ -122,10 +122,10 @@ class SubscriptionService {
                 subscription.save(true)
                 result.success = true
             } else {
-                result.errorCode = 'ACCOUNT_NOT_FOUND'
+                result.errorCode = ErrorCode.ACCOUNT_NOT_FOUND.toString()
             }
         } catch (Exception e) {
-            result.errorCode = 'UNKNOWN_ERROR'
+            result.errorCode = ErrorCode.UNKNOWN_ERROR.toString()
         }
         result
     }
@@ -146,25 +146,25 @@ class SubscriptionService {
                 }
                 result.success = true
             } else {
-                result.errorCode = 'ACCOUNT_NOT_FOUND'
+                result.errorCode = ErrorCode.ACCOUNT_NOT_FOUND.toString()
             }
         } catch (Exception e) {
-            result.errorCode = 'UNKNOWN_ERROR'
+            result.errorCode = ErrorCode.UNKNOWN_ERROR.toString()
         }
         result
     }
     
     private getStatusFromNotificationType(String noticeType) {
         def status
-        switch(noticeType) {
-            case 'DEACTIVATED':
-                status = 'SUSPENDED'
+        switch(NoticeType.fromValue(noticeType)) {
+            case NoticeType.DEACTIVATED:
+                status = AccountStatus.SUSPENDED.toString()
                 break
-            case 'REACTIVATED':
-                status = 'ACTIVE'
+            case NoticeType.REACTIVATED:
+                status = AccountStatus.ACTIVE.toString()
                 break
-            case 'CLOSED':
-                status = 'CANCELLED'
+            case NoticeType.CLOSED:
+                status = AccountStatus.CANCELLED.toString()
                 break
             default:
                 break 

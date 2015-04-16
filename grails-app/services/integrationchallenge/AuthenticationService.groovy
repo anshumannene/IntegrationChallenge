@@ -16,7 +16,7 @@ class AuthenticationService extends OauthService {
     OauthResourceService oauthResourceService
 
     String signAndSendRequest(url) {
-        //verify incoming request
+        //TODO: verify incoming request
         OAuthRequest request = new OAuthRequest(Verb.GET, url)
         log.info(request.getOauthParameters())
         Token token = new Token("", "")
