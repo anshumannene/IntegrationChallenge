@@ -31,7 +31,20 @@ class SubscriptionService {
         def event = new XmlSlurper().parseText(responseXml)
         handleEvent(event)
     }
+    
+    def assign(String url) {
+        String responseXml = authenticationService.signAndSendRequest(url)
+        def event = new XmlSlurper().parseText(responseXml)
+        handleEvent(event)
+    }
 
+    def unassign(String url) {
+        String responseXml = authenticationService.signAndSendRequest(url)
+        def event = new XmlSlurper().parseText(responseXml)
+        handleEvent(event)
+    }
+
+    
     private handleEvent(event) {
         EventType eventType = EventType.fromValue(event?.type?.text())
         
@@ -48,6 +61,12 @@ class SubscriptionService {
                 break
             case EventType.SUBSCRIPTION_NOTICE:
                 result = noticeSubscription(event)
+                break
+            case EventType.USER_ASSIGNMENT:
+                result = assignUser(event)
+                break
+            case EventType.USER_UNASSIGNMENT:
+                result = unassignUser(event)
                 break
             default:
                 result.success = false
@@ -86,6 +105,7 @@ class SubscriptionService {
                 }
             }
         } catch (Exception e) {
+            log.error(e)
             result.errorCode = ErrorCode.UNKNOWN_ERROR.toString()
         }
         result
@@ -105,6 +125,7 @@ class SubscriptionService {
                 result.errorCode = ErrorCode.ACCOUNT_NOT_FOUND.toString()
             }
         } catch (Exception e) {
+            log.error(e)
             result.errorCode = ErrorCode.UNKNOWN_ERROR.toString()
         }
         result
@@ -125,6 +146,7 @@ class SubscriptionService {
                 result.errorCode = ErrorCode.ACCOUNT_NOT_FOUND.toString()
             }
         } catch (Exception e) {
+            log.error(e)
             result.errorCode = ErrorCode.UNKNOWN_ERROR.toString()
         }
         result
@@ -149,12 +171,57 @@ class SubscriptionService {
                 result.errorCode = ErrorCode.ACCOUNT_NOT_FOUND.toString()
             }
         } catch (Exception e) {
+            log.error(e)
             result.errorCode = ErrorCode.UNKNOWN_ERROR.toString()
         }
         result
     }
     
-    private getStatusFromNotificationType(String noticeType) {
+    private assignUser(event) {
+        def payload = event?.payload,
+            accountIdentifier = payload?.account?.accountIdentifier?.text(),
+            result = [success: false]
+        try {
+            Subscription subscription = Subscription.findWhere([accountIdentifier: accountIdentifier])
+            if (subscription) {
+                if (subscription.users.size() >= subscription.maxUsers) {
+                    result.errorCode = ErrorCode.MAX_USERS_REACHED.toString()
+                } else {
+                    User user = unmarshallingService.getUser(payload?.user)
+                    user.save(true)
+                    
+                    subscription.users.add(user)
+                    subscription.save(flush:true)
+                }
+            }
+        } catch (Exception e) {
+            log.error(e)
+            result.errorCode = ErrorCode.UNKNOWN_ERROR.toString()
+        }
+        result
+    }
+    
+    private unassignUser(event) {
+        def payload = event?.payload,
+        accountIdentifier = payload?.account?.accountIdentifier?.text(),
+        result = [success: false]
+        try {
+            Subscription subscription = Subscription.findWhere([accountIdentifier: accountIdentifier])
+            if (subscription) {
+                User user = unmarshallingService.getUser(payload?.user)
+                
+                subscription.users.remove(user)
+                subscription.save(flush:true)
+                result.success = true
+            }
+        } catch (Exception e) {
+            log.error(e)
+            result.errorCode = ErrorCode.UNKNOWN_ERROR.toString()
+        }
+        result
+    }
+    
+    private getStatusFromNotificationType(noticeType) {
         def status
         switch(NoticeType.fromValue(noticeType)) {
             case NoticeType.DEACTIVATED:
@@ -171,4 +238,5 @@ class SubscriptionService {
         }
         status
     }
+
 }

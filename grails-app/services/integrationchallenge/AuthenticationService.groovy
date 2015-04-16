@@ -4,7 +4,6 @@ import org.scribe.model.OAuthRequest
 import org.scribe.model.Response
 import org.scribe.model.Token
 import org.scribe.model.Verb
-import org.scribe.model.Verifier
 import org.scribe.oauth.OAuthService
 
 import uk.co.desirableobjects.oauth.scribe.OauthResourceService
@@ -14,7 +13,6 @@ class AuthenticationService extends OauthService {
 
     private static final String SERVICE_NAME = "appdirect"
     OauthResourceService oauthResourceService
-
     String signAndSendRequest(url) {
         //TODO: verify incoming request
         OAuthRequest request = new OAuthRequest(Verb.GET, url)

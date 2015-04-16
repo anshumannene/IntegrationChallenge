@@ -88,8 +88,8 @@ oauth {
     providers {
         appdirect {
             api = AppDirectApi
-            key = 'integrationchallenge-20800'
-            secret = '4qQd2EoyH8Gvuo8u'
+            key = 'integrationchallengemultiuser-21538' //'integrationchallenge-20800'
+            secret = 'LoIhHYbTfMf0KoUH' //'4qQd2EoyH8Gvuo8u'
         }
     }
 }

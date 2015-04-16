@@ -6,11 +6,14 @@ class Subscription {
     Company company
     String status
     String edition
+    Set<User> users = new HashSet<User>()
+    Integer maxUsers = 10
 
     static constraints = {
         accountIdentifier nullable: false, unique: true
         company nullable: false
         edition nullable: false
+        users nullable: true
     }
 
     def static Subscription createInstance(Company company, String edition) {
@@ -21,6 +24,7 @@ class Subscription {
         instance.edition = edition
         return instance
     }
+    
     @Override
     public String toString() {
         [accountIdentifier, edition, status, company].join(" : ")

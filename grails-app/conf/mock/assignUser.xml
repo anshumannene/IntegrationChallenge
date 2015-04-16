@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<event xmlns:atom="http://www.w3.org/2005/Atom">
+  <type>USER_ASSIGNMENT</type>
+  <marketplace>
+    <baseUrl>https://www.acme-marketplace.com</baseUrl>
+    <partner>ACME</partner>
+  </marketplace>
+  <creator>
+    <email>admin@fakeco</email>
+    <firstName>Alice</firstName>
+    <lastName>Hacker</lastName>
+    <openId>https://www.acme-marketplace.com/openid/id/078e23c3-060f-47b4-b1a3-65c3cb2a283d</openId>
+  </creator>
+  <payload>
+    <account>
+      <accountIdentifier>accountXYZ</accountIdentifier>
+    </account>
+    <user>
+      <email>bob@fakeco</email>
+      <firstName>Bob</firstName>
+      <lastName>Bitdiddle</lastName>
+      <openId>https://www.acme-marketplace.com/openid/id/4a76c6c4-96e1-42a0-93e0-36af5fa374e8</openId>
+    </user>
+  </payload>
+</event>

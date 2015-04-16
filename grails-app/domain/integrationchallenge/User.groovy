@@ -1,10 +1,9 @@
 package integrationchallenge
 
 class User {
-
+    String uuid
     String firstName
     String lastName
-    String uuid
     String openId
 
     static belongsTo = [company: Company]
