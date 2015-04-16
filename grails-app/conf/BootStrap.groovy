@@ -1,3 +1,4 @@
+import grails.util.Environment
 import integrationchallenge.Company
 import integrationchallenge.Subscription
 import integrationchallenge.User
@@ -5,7 +6,7 @@ import integrationchallenge.User
 class BootStrap {
 
     def init = { servletContext ->
-        if (!User.findByUuid("6fbedef2-f983-42bc-b56b-adafe8f07965")) {
+        if (Environment.getCurrentEnvironment().equals(Environment.TEST)) {
             User user = new User(uuid: UUID.randomUUID().toString(), firstName: "Tester", lastName: "Chester",
                 openId: "https://www.appdirect.com/openid/id/6fbedef2-f983-42bc-b56b-adafe8f07965")
             user.save(flush:true)
